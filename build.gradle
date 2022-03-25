@@ -22,6 +22,7 @@ subprojects {
         lombokVersion = '1.18.22'
         jupiterVersion = '5.8.2'
         mockitoJunitJupiter = '4.4.0'
+        awsDynamoDBVersion = '1.12.184'
     }
 
     compileJava {
