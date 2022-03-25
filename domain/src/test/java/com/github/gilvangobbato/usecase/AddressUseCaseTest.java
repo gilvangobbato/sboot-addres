@@ -1,13 +1,13 @@
-package com.github.gilvangobbato.adapter.output;
+package com.github.gilvangobbato.usecase;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddressRepositoryTest {
+class AddressUseCaseTest {
 
     @Test
-    void insert() {
+    void shouldInsertSuccess(){
         assertTrue(true);
     }
 }
