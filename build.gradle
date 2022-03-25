@@ -2,11 +2,6 @@ plugins {
     id 'java'
 }
 
-ext {
-    lombok_version = '1.18.22'
-    jupiter_version = '5.8.2'
-}
-
 allprojects {
 
     version '1.0-SNAPSHOT'
@@ -21,8 +16,29 @@ allprojects {
 
 subprojects {
 
+    apply plugin: "java"
+
+    ext {
+        lombokVersion = '1.18.22'
+        jupiterVersion = '5.8.2'
+        mockitoJunitJupiter = '4.4.0'
+    }
+
+    compileJava {
+        sourceCompatibility = 17
+        targetCompatibility = 17
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:$lombokVersion"
+        annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+        implementation "org.projectlombok:lombok:$lombokVersion"
+
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
+    }
+
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
-
 }

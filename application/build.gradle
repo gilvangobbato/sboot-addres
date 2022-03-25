@@ -7,18 +7,11 @@ plugins {
 dependencies {
     implementation project(':domain')
 
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter_version"
-
-    compileOnly "org.projectlombok:lombok:$lombok_version"
-    annotationProcessor "org.projectlombok:$lombok_version"
 }
-
 
 jar {
     enabled = true
