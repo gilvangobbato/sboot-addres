@@ -1,11 +1,16 @@
 package com.github.gilvangobbato.adapter.output;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsync;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.output.AddressPort;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class AddressRepository implements AddressPort {
+
+    private final AmazonDynamoDBAsync amazonDynamoDBAsync;
 
     @Override
     public List<Address> findAll(int page, int limit) {
@@ -19,7 +24,7 @@ public class AddressRepository implements AddressPort {
 
     @Override
     public Long insert(Address address) {
-        System.out.println("Inserindo");
+//        amazonDynamoDBAsync.update
         return 1L;
     }
 

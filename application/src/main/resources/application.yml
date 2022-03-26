@@ -1,6 +1,5 @@
 aws:
-  dynamodb:
-    endpoint: http://localhost:4569
+  endpoint: http://localhost:4569
   accesskey: 123
   secretkey: 123
   region: us-east-1
