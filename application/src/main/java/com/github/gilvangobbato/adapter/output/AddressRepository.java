@@ -1,10 +1,10 @@
 package com.github.gilvangobbato.adapter.output;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.output.AddressPort;
@@ -29,12 +29,26 @@ public class AddressRepository implements AddressPort {
 
     @Override
     public Address findByCep(String cep) {
+
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("cep = :v_cep").withValueMap(new ValueMap().withString(":v_cep", cep));
+
+        try{
+            ItemCollection<QueryOutcome> outcome = this.getTable().query(querySpec);
+            Item item = outcome.iterator().next();
+            return Address.builder()
+                    .cep(item.getString("cpf"))
+                    .ibgeCity(item.getString("ibge_city"))
+                    .city(item.getString("city"))
+                    .build();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public Long insert(Address address) {
-        Table table = dynamoDB.getTable(ADDRESS);
+
         final Map<String, Object> infoMap = new HashMap<>();
 
         infoMap.put("city", address.getCity());
@@ -51,7 +65,7 @@ public class AddressRepository implements AddressPort {
         infoMap.put("insert_date", LocalDateTime.now().toString());
 
         try {
-            PutItemOutcome outcome = table.putItem(
+            PutItemOutcome outcome = this.getTable().putItem(
                     Item.fromMap(infoMap).withPrimaryKey("cep", address.getCep()),
                     "attribute_not_exists(cep)",
                     null,
@@ -62,6 +76,10 @@ public class AddressRepository implements AddressPort {
         }
 
         return 1L;
+    }
+
+    private Table getTable() {
+        return dynamoDB.getTable(ADDRESS);
     }
 
     @Override

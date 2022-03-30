@@ -8,5 +8,6 @@ public interface IAddressUseCase {
 
     void update(Address address);
 
+    Address findByCep(String cep);
 
 }

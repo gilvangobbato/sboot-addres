@@ -19,4 +19,9 @@ public class AddressUseCase implements IAddressUseCase {
     public void update(Address address) {
 
     }
+
+    @Override
+    public Address findByCep(String cep) {
+        return addressPort.findByCep(cep);
+    }
 }
