@@ -4,7 +4,8 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.output.AddressPort;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @AllArgsConstructor
 public class AddressRepository implements AddressPort {
@@ -49,8 +51,12 @@ public class AddressRepository implements AddressPort {
         infoMap.put("insert_date", LocalDateTime.now().toString());
 
         try {
-            PutItemOutcome outcome = table.putItem(Item.fromMap(infoMap).withPrimaryKey("cep", address.getCep()));
-            System.out.println(outcome.getPutItemResult().toString());
+            PutItemOutcome outcome = table.putItem(
+                    Item.fromMap(infoMap).withPrimaryKey("cep", address.getCep()),
+                    "attribute_not_exists(cep)",
+                    null,
+                    null);
+            System.out.println(outcome.getPutItemResult());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
