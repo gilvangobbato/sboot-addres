@@ -7,9 +7,11 @@ plugins {
 dependencies {
     implementation project(':domain')
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-    implementation "com.amazonaws:aws-java-sdk-dynamodb:$awsDynamoDBVersion"
+//    implementation "com.amazonaws:aws-java-sdk-dynamodb:$awsDynamoDBVersion"
+    implementation "software.amazon.awssdk:dynamodb:$awsDynamoDBVersion"
+    implementation "software.amazon.awssdk:dynamodb-enhanced:$awsDynamoDBVersion"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 

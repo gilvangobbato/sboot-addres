@@ -3,14 +3,13 @@ package com.github.gilvangobbato.adapter.input;
 import com.github.gilvangobbato.adapter.input.dto.AddressDto;
 import com.github.gilvangobbato.adapter.input.dto.AddressListDto;
 import com.github.gilvangobbato.adapter.input.mapper.AddressMapper;
-import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 
 @RestController
@@ -28,30 +27,29 @@ public class AddressController {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    public ResponseEntity<AddressDto> insert(@RequestBody AddressDto address) {
-        useCase.insert(AddressMapper.toEntity(address));
-        return ResponseEntity.ok(address);
+    public Mono<ResponseEntity<AddressDto>> insert(@RequestBody AddressDto address) {
+
+        return Mono.just(address)
+                .flatMap(it -> Mono.defer(() -> useCase.insert(AddressMapper.toEntity(it))))
+                .map(it -> ResponseEntity.ok(address));
     }
 
     @RequestMapping(value = "/v1/address/all",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    public ResponseEntity<AddressListDto> findAll(Integer offset, Integer limit) {
+    public Flux<ResponseEntity<AddressListDto>> findAll(Integer offset, Integer limit) {
 
-        return ResponseEntity.ok().build();
+        return Flux.just(ResponseEntity.noContent().build());
     }
 
     @RequestMapping(value = "/v1/address/{cep}",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    public ResponseEntity<AddressDto> findByCep(@PathVariable("cep") String cep) {
-        Address address = useCase.findByCep(cep);
+    public Mono<ResponseEntity<AddressDto>> findByCep(@PathVariable("cep") String cep) {
 
-        if(address == null){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-
-        return ResponseEntity.ok(AddressMapper.toDto(address));
+        return Mono.just(cep)
+                .flatMap(it -> Mono.defer(() -> useCase.findByCep(it)))
+                .map(it -> ResponseEntity.ok(AddressMapper.toDto(it)));
     }
 
 }

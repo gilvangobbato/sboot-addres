@@ -1,5 +1,5 @@
 aws:
   endpoint: http://localhost:4566
-  accesskey: 123
-  secretkey: 123
+  accessKey: 123
+  secretKey: 123
   region: us-east-1
