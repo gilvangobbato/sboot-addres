@@ -4,9 +4,6 @@ import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import com.github.gilvangobbato.port.output.AddressPort;
 import lombok.AllArgsConstructor;
-import reactor.core.publisher.Mono;
-
-import java.util.concurrent.CompletableFuture;
 
 @AllArgsConstructor
 public class AddressUseCase implements IAddressUseCase {
@@ -14,9 +11,8 @@ public class AddressUseCase implements IAddressUseCase {
     private final AddressPort addressPort;
 
     @Override
-    public Mono<Boolean> insert(Address address) {
-        addressPort.insert(address).join();
-        return Mono.just(Boolean.TRUE);
+    public void insert(Address address) {
+        addressPort.insert(address);
     }
 
     @Override
@@ -25,7 +21,7 @@ public class AddressUseCase implements IAddressUseCase {
     }
 
     @Override
-    public Mono<Address> findByCep(String cep) {
-        return Mono.fromFuture(addressPort.findByCep(cep));
+    public Address findByCep(String cep) {
+        return addressPort.findByCep(cep);
     }
 }
