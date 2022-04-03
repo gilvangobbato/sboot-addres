@@ -3,6 +3,7 @@ package com.github.gilvangobbato.adapter.input;
 import com.github.gilvangobbato.adapter.input.dto.AddressDto;
 import com.github.gilvangobbato.adapter.input.dto.AddressListDto;
 import com.github.gilvangobbato.adapter.input.mapper.AddressMapper;
+import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +38,14 @@ public class AddressController {
     @RequestMapping(value = "/v1/address/all",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    public Flux<ResponseEntity<AddressListDto>> findAll(Integer offset, Integer limit) {
-
-        return Flux.just(ResponseEntity.noContent().build());
+    public Mono<ResponseEntity<AddressListDto>> findAll(
+            @RequestParam(defaultValue = "0", value = "offset") Integer offset,
+            @RequestParam(defaultValue = "10", value = "limit") Integer limit) {
+        return Flux.from(useCase.getAddressList(offset, limit))
+                .map(AddressMapper::toDto)
+                .collectList()
+                .map(AddressMapper::toDtoList)
+                .map(ResponseEntity::ok);
     }
 
     @RequestMapping(value = "/v1/address/{cep}",

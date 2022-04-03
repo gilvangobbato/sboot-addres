@@ -8,6 +8,7 @@ import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 
 import java.time.LocalDateTime;
@@ -21,10 +22,12 @@ public class AddressRepository implements AddressPort {
 
     @Override
     public PagePublisher<Address> findAll(int page, int limit) {
+        System.out.println("Times");
         return dynamoDbAsyncTable.scan(
                 ScanEnhancedRequest.builder()
-                        .segment(page).
-                        limit(limit)
+                        .segment(page)
+                        .limit(limit)
+                        .totalSegments(limit)
                         .build()
         );
     }
