@@ -1,0 +1,63 @@
+{
+  "Timestamp": {
+    "$resolver": "timestamp",
+    "epoch": {
+      "unit": "nanos"
+    }
+  },
+  "SeverityText": {
+    "$resolver": "level",
+    "field": "name"
+  },
+  "Attributes": {
+    "LineNumber": {
+      "$resolver": "source",
+      "field": "lineNumber"
+    },
+    "Class": {
+      "$resolver": "source",
+      "field": "className"
+    },
+    "ThreadName": {
+      "$resolver": "thread",
+      "field": "name"
+    },
+    "Method": {
+      "$resolver": "source",
+      "field": "methodName"
+    },
+    "LoggerName": {
+      "$resolver": "logger",
+      "field": "name"
+    },
+    "exception.type": {
+      "$resolver": "exception",
+      "field": "className"
+    },
+    "exception.message": {
+      "$resolver": "exception",
+      "field": "message"
+    },
+    "exception.stacktrace": {
+      "$resolver": "exception",
+      "field": "stackTrace",
+      "stackTrace": {
+        "stringified": true
+      }
+    }
+  },
+  "ExtraAttributes": {
+    "$resolver": "map",
+    "pattern": "^((?!Resource).)*$",
+    "flatten": true
+  },
+  "Resource": {
+    "$resolver": "map",
+    "key": "Resource"
+  },
+  "Body": {
+    "$resolver": "message",
+    "stringified": true,
+    "includeStackTrace": false
+  }
+}

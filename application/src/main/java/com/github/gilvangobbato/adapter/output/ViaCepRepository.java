@@ -19,7 +19,8 @@ public class ViaCepRepository implements ViaCepPort {
                 .flatMap(it->Mono.just(restTemplate.getForEntity("https://viacep.com.br/ws/".concat(cep).concat("/json/"), ViaCepAddressDto.class)))
                 .map(response->{
                     if(response.getStatusCode().is2xxSuccessful()){
-                        return response.getBody();
+                        ViaCepAddressDto dto = response.getBody();
+                        return (dto == null || dto.isErro()) ? null : dto;
                     }
                     return null;
                 })

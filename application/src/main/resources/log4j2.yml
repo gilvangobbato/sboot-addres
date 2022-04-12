@@ -1,0 +1,21 @@
+Configuration:
+  status: warn
+  Properties:
+    Property:
+      name: log_pattern
+      value: “%msg%n”
+
+  appenders:
+    Console:
+      - name: JSON_LAYOUT_APPENDER
+        target: SYSTEM_OUT
+        follow: true
+        JSONTemplateLayout:
+          eventTemplateUri: classpath:layout.json
+
+  Loggers:
+    Root:
+      level: info
+      additivity: false
+      AppenderRef:
+        ref: JSON_LAYOUT_APPENDER
