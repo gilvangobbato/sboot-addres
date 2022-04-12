@@ -1,12 +1,16 @@
 package com.github.gilvangobbato.configuration;
 
 import com.github.gilvangobbato.adapter.output.AddressRepository;
+import com.github.gilvangobbato.adapter.output.ViaCepRepository;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import com.github.gilvangobbato.port.output.AddressPort;
+import com.github.gilvangobbato.port.output.ViaCepPort;
 import com.github.gilvangobbato.usecase.AddressUseCase;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
@@ -20,8 +24,14 @@ import java.net.URI;
 public class ApplicationConfig {
 
     @Bean
-    public IAddressUseCase addressUseCase(final AddressPort addressPort) {
-        return new AddressUseCase(addressPort);
+    public RestTemplate restTemplate() {
+        return new RestTemplateBuilder()
+                .build();
+    }
+
+    @Bean
+    public IAddressUseCase addressUseCase(final AddressPort addressPort, final ViaCepPort viaCepPort) {
+        return new AddressUseCase(addressPort, viaCepPort);
     }
 
     @Bean
@@ -52,5 +62,10 @@ public class ApplicationConfig {
         return new AddressRepository(
                 dynamoDbEnhancedAsyncClient.table(Address.class.getSimpleName(), TableSchema.fromBean(Address.class))
         );
+    }
+
+    @Bean
+    public ViaCepRepository viaCepRepository(final RestTemplate restTemplate){
+        return new ViaCepRepository(restTemplate);
     }
 }

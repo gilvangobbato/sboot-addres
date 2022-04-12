@@ -1,9 +1,9 @@
 package com.github.gilvangobbato.port.output;
 
 import com.github.gilvangobbato.domain.Address;
+import reactor.core.publisher.Mono;
 import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface AddressPort {
@@ -13,5 +13,5 @@ public interface AddressPort {
 
     CompletableFuture<Void> insert(Address address);
 
-    CompletableFuture<Address> update(Address address);
+    Mono<Boolean> update(Address address);
 }

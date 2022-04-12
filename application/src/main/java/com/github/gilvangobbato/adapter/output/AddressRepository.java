@@ -3,15 +3,15 @@ package com.github.gilvangobbato.adapter.output;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.output.AddressPort;
 import lombok.AllArgsConstructor;
+import reactor.core.publisher.Mono;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @AllArgsConstructor
@@ -53,8 +53,12 @@ public class AddressRepository implements AddressPort {
 
 
     @Override
-    public CompletableFuture<Address> update(Address address) {
-//        address.setUpdatedAt(LocalDateTime.now());
-        return dynamoDbAsyncTable.updateItem(address);
+    public Mono<Boolean> update(Address address) {
+        return Mono.fromFuture(this.findByCep(address.getCep()))
+                .doOnSuccess(Objects::requireNonNull)
+                .doOnNext(__->this.dynamoDbAsyncTable.updateItem(address))
+                .doOnSuccess(Objects::requireNonNull)
+                .thenReturn(Boolean.TRUE)
+                .onErrorReturn(Boolean.FALSE);
     }
 }

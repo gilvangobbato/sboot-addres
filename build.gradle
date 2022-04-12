@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "io.freefair.lombok" version "6.4.2"
 }
 
 allprojects {
@@ -17,12 +18,11 @@ allprojects {
 subprojects {
 
     apply plugin: "java"
+    apply plugin: "io.freefair.lombok"
 
     ext {
-        lombokVersion = '1.18.22'
         jupiterVersion = '5.8.2'
         mockitoJunitJupiter = '4.4.0'
-//        awsDynamoDBVersion = '1.12.184'
         awsDynamoDBVersion = '2.17.159'
     }
 
@@ -32,10 +32,6 @@ subprojects {
     }
 
     dependencies {
-        compileOnly "org.projectlombok:lombok:$lombokVersion"
-        annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-        implementation "org.projectlombok:lombok:$lombokVersion"
-
         testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
     }

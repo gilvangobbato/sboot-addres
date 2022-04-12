@@ -3,16 +3,18 @@ package com.github.gilvangobbato.usecase;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import com.github.gilvangobbato.port.output.AddressPort;
+import com.github.gilvangobbato.port.output.ViaCepPort;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.Objects;
 
 @AllArgsConstructor
 public class AddressUseCase implements IAddressUseCase {
 
     private final AddressPort addressPort;
+    private final ViaCepPort viaCepPort;
 
     @Override
     public Mono<Boolean> insert(Address address) {
@@ -21,13 +23,14 @@ public class AddressUseCase implements IAddressUseCase {
     }
 
     @Override
-    public void update(Address address) {
-
+    public Mono<Boolean> update(Address address) {
+        return addressPort.update(address);
     }
 
     @Override
     public Mono<Address> findByCep(String cep) {
-        return Mono.fromFuture(addressPort.findByCep(cep));
+        return Mono.from(Mono.fromFuture(addressPort.findByCep(cep)))
+                .switchIfEmpty(viaCepPort.getByCep(cep));
     }
 
     @Override

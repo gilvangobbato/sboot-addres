@@ -3,7 +3,6 @@ package com.github.gilvangobbato.adapter.input;
 import com.github.gilvangobbato.adapter.input.dto.AddressDto;
 import com.github.gilvangobbato.adapter.input.dto.AddressListDto;
 import com.github.gilvangobbato.adapter.input.mapper.AddressMapper;
-import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +32,22 @@ public class AddressController {
         return Mono.just(address)
                 .flatMap(it -> Mono.defer(() -> useCase.insert(AddressMapper.toEntity(it))))
                 .map(it -> ResponseEntity.ok(address));
+    }
+
+    @RequestMapping(value = "/v1/address",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.PUT)
+    public Mono<ResponseEntity<AddressDto>> update(@RequestBody AddressDto address) {
+
+        return Mono.just(address)
+                .flatMap(it -> Mono.defer(() -> useCase.update(AddressMapper.toEntity(it))))
+                .map(it -> {
+                    if (it)
+                        return ResponseEntity.ok(address);
+                    else
+                        return ResponseEntity.badRequest().build();
+                });
     }
 
     @RequestMapping(value = "/v1/address/all",
