@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation 'io.projectreactor:reactor-core:3.4.15'
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
     implementation "software.amazon.awssdk:dynamodb-enhanced:$awsDynamoDBVersion"
 }
 

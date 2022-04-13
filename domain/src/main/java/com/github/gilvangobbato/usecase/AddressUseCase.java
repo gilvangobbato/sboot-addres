@@ -20,8 +20,9 @@ public class AddressUseCase implements IAddressUseCase {
 
     @Override
     public Mono<Boolean> insert(Address address) {
-        addressPort.insert(address).join();
-        return Mono.just(Boolean.TRUE);
+        return Mono.fromFuture(addressPort.insert(address))
+                .map(it -> Boolean.TRUE)
+                .onErrorReturn(Boolean.FALSE);
     }
 
     @Override
@@ -31,10 +32,8 @@ public class AddressUseCase implements IAddressUseCase {
 
     @Override
     public Mono<Address> findByCep(String cep) {
-        return Mono
-                .just(cep)
-                .doOnNext(log::info)
-                .flatMap(it->Mono.fromFuture(addressPort.findByCep(cep)))
+        return Mono.fromFuture(addressPort.findByCep(cep))
+                .doOnNext(it->log.info(it.toString()))
                 .switchIfEmpty(viaCepPort.getByCep(cep))
                 .doOnNext(this::sendToQueue);
     }

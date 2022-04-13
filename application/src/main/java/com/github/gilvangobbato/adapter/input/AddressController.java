@@ -31,7 +31,14 @@ public class AddressController {
 
         return Mono.just(address)
                 .flatMap(it -> Mono.defer(() -> useCase.insert(AddressMapper.toEntity(it))))
-                .map(it -> ResponseEntity.ok(address));
+                .map(it -> {
+                    if (it) {
+                        return ResponseEntity.ok(address);
+
+                    } else {
+                        return ResponseEntity.badRequest().build();
+                    }
+                });
     }
 
     @RequestMapping(value = "/v1/address",

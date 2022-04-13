@@ -3,6 +3,19 @@ plugins {
     id "io.freefair.lombok" version "6.4.2"
 }
 
+ext {
+    reactorVersion = '3.4.16'
+    jupiterVersion = '5.8.2'
+    mockitoJunitJupiter = '4.4.0'
+    awsDynamoDBVersion = '2.17.159'
+
+    apacheCommonsLangVersion = "3.12.0"
+    log4jVersion = "2.17.2"
+    jacksonVersion = '2.13.2'
+    jacksonDatabindVersion = '2.13.2.2'
+    reactorTestVersion = '3.4.16'
+}
+
 allprojects {
 
     version '1.0-SNAPSHOT'
@@ -20,25 +33,31 @@ subprojects {
     apply plugin: "java"
     apply plugin: "io.freefair.lombok"
 
-    ext {
-        jupiterVersion = '5.8.2'
-        mockitoJunitJupiter = '4.4.0'
-        awsDynamoDBVersion = '2.17.159'
-
-        apacheCommonsLangVersion = "3.12.0"
-        log4jVersion = "2.17.2"
-        jacksonVersion = '2.13.2'
-        jacksonDatabindVersion = '2.13.2.2'
-    }
-
     compileJava {
         sourceCompatibility = 17
         targetCompatibility = 17
     }
 
     dependencies {
+        implementation "org.apache.commons:commons-lang3:$apacheCommonsLangVersion"
+        implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+        implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
+        implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+        implementation "org.apache.logging.log4j:log4j-jul:$log4jVersion"
+        implementation "org.apache.logging.log4j:log4j-layout-template-json:$log4jVersion"
+
+
+        implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+        implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+        implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+
+        testImplementation "io.projectreactor:reactor-test:$reactorTestVersion"
+        testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJunitJupiter"
         testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
+        testImplementation "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:$jupiterVersion"
     }
 
     tasks.withType(Test).configureEach {
