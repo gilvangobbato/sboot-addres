@@ -3,3 +3,9 @@ aws:
   accessKey: 123
   secretKey: 123
   region: us-east-1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus

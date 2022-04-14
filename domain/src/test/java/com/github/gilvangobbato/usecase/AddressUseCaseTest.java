@@ -49,8 +49,7 @@ public class AddressUseCaseTest {
     }
 
     @Test
-    void shouldReturnAddress() {
-
+    void shouldReturnAddressFromDynamoDB() {
         when(addressPort.findByCep(any())).thenReturn(CompletableFuture.completedFuture(this.buildAddress()));
         when(viaCepPort.getByCep(any())).thenReturn(Mono.just(Address.builder().build()));
 
@@ -60,6 +59,18 @@ public class AddressUseCaseTest {
                     assertEquals("RS", it.getUf());
                 }).verifyComplete();
 
+    }
+
+    @Test
+    void shouldReturnAddressFromViaCep(){
+        when(addressPort.findByCep(any())).thenReturn(new CompletableFuture<Address>().completeAsync(() -> null));
+        when(viaCepPort.getByCep(any())).thenReturn(Mono.just(this.buildAddress()));
+
+        StepVerifier.create(this.useCase.findByCep("95720000"))
+                .assertNext(it->{
+                    assertNotNull(it);
+                    assertEquals("RS", it.getUf());
+                }).verifyComplete();
     }
 
     private Address buildAddress() {
