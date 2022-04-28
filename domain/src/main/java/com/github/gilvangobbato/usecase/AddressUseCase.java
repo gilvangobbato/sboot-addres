@@ -33,7 +33,7 @@ public class AddressUseCase implements IAddressUseCase {
     @Override
     public Mono<Address> findByCep(String cep) {
         return Mono.fromFuture(addressPort.findByCep(cep))
-                .doOnNext(it -> log.info(it.toString()))
+//                .doOnNext(it -> log.info(it.toString()))
                 .switchIfEmpty(
                         Mono.defer(() -> viaCepPort.getByCep(cep)
                                 .flatMap(sqsSender::send)

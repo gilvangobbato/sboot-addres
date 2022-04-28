@@ -4,6 +4,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
+import com.github.gilvangobbato.adapter.input.AddressSqsListener;
 import com.github.gilvangobbato.adapter.output.AddressRepository;
 import com.github.gilvangobbato.adapter.output.AddressSqsSender;
 import com.github.gilvangobbato.adapter.output.ViaCepRepository;
@@ -79,6 +80,11 @@ public class ApplicationConfig {
                 .withEndpointConfiguration(new AwsClientBuilder
                         .EndpointConfiguration(properties.endpoint(), properties.region()))
                 .build();
+    }
+
+    @Bean
+    public AddressSqsListener addressSqsListener(){
+        return new AddressSqsListener();
     }
 
     @Bean
