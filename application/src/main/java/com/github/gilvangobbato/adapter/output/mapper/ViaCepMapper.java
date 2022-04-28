@@ -24,4 +24,19 @@ public class ViaCepMapper {
                 .build();
     }
 
+    public static ViaCepAddressDto toDto(Address address){
+        return ViaCepAddressDto.builder()
+                .gia(address.getGia())
+                .ddd(address.getDdd())
+                .siafi(address.getSiafi())
+                .complemento(address.getComplement())
+                .uf(address.getUf())
+                .bairro(address.getDistrict())
+                .logradouro(address.getPlace())
+                .localidade(address.getCity())
+                .ibge(address.getIbgeCity())
+                .cep(address.getCep())
+                .build();
+    }
+
 }

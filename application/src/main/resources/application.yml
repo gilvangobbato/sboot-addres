@@ -3,6 +3,17 @@ aws:
   accessKey: 123
   secretKey: 123
   region: us-east-1
+  sqs:
+    endpoint: http://localhost:4566
+
+cloud:
+  aws:
+    region:
+      static: us-east-1
+      auto: false
+      use-default-aws-region-chain: true
+    stack:
+      auto: false
 
 management:
   endpoints:

@@ -3,13 +3,12 @@ package com.github.gilvangobbato.usecase;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import com.github.gilvangobbato.port.output.AddressPort;
+import com.github.gilvangobbato.port.output.IAddressSqsSender;
 import com.github.gilvangobbato.port.output.ViaCepPort;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
@@ -17,6 +16,7 @@ public class AddressUseCase implements IAddressUseCase {
 
     private final AddressPort addressPort;
     private final ViaCepPort viaCepPort;
+    private final IAddressSqsSender sqsSender;
 
     @Override
     public Mono<Boolean> insert(Address address) {
@@ -33,19 +33,16 @@ public class AddressUseCase implements IAddressUseCase {
     @Override
     public Mono<Address> findByCep(String cep) {
         return Mono.fromFuture(addressPort.findByCep(cep))
-                .doOnNext(it->log.info(it.toString()))
-                .switchIfEmpty(viaCepPort.getByCep(cep))
-                .doOnNext(this::sendToQueue);
+                .doOnNext(it -> log.info(it.toString()))
+                .switchIfEmpty(
+                        Mono.defer(() -> viaCepPort.getByCep(cep)
+                                .flatMap(sqsSender::send)
+                        )
+                );
     }
 
     @Override
     public Flux<Address> getAddressList(int offset, int limit) {
         return Flux.from(addressPort.findAll(offset, limit).items());
-    }
-
-    @Override
-    public void sendToQueue(Address address) {
-        //TODO - SendToQueue
-        log.info("Sent to queue");
     }
 }

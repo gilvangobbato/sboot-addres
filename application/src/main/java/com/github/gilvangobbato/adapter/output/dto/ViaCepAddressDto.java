@@ -1,12 +1,10 @@
 package com.github.gilvangobbato.adapter.output.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ViaCepAddressDto {

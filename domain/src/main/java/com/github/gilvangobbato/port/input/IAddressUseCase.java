@@ -14,5 +14,4 @@ public interface IAddressUseCase {
 
     Flux<Address> getAddressList(int offset, int limit);
 
-    void sendToQueue(Address address);
 }

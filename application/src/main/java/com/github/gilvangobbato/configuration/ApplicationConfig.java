@@ -1,13 +1,20 @@
 package com.github.gilvangobbato.configuration;
 
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.sqs.AmazonSQSAsync;
+import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.github.gilvangobbato.adapter.output.AddressRepository;
+import com.github.gilvangobbato.adapter.output.AddressSqsSender;
 import com.github.gilvangobbato.adapter.output.ViaCepRepository;
 import com.github.gilvangobbato.domain.Address;
 import com.github.gilvangobbato.port.input.IAddressUseCase;
 import com.github.gilvangobbato.port.output.AddressPort;
+import com.github.gilvangobbato.port.output.IAddressSqsSender;
 import com.github.gilvangobbato.port.output.ViaCepPort;
 import com.github.gilvangobbato.usecase.AddressUseCase;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -30,8 +37,11 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public IAddressUseCase addressUseCase(final AddressPort addressPort, final ViaCepPort viaCepPort) {
-        return new AddressUseCase(addressPort, viaCepPort);
+    public IAddressUseCase addressUseCase(
+            final AddressPort addressPort,
+            final ViaCepPort viaCepPort,
+            final IAddressSqsSender sqsSender) {
+        return new AddressUseCase(addressPort, viaCepPort, sqsSender);
     }
 
     @Bean
@@ -58,6 +68,26 @@ public class ApplicationConfig {
     }
 
     @Bean
+    public QueueMessagingTemplate queueMessageTemplate(final AmazonSQSAsync amazonSQSAsync) {
+        return new QueueMessagingTemplate(amazonSQSAsync);
+    }
+
+    @Bean
+    public AmazonSQSAsync amazonSQS(final AwsProperties properties, final AwsBasicCredentials awsBasicCredentials) {
+        return AmazonSQSAsyncClientBuilder.standard()
+                .withCredentials(new DefaultAWSCredentialsProviderChain())
+                .withEndpointConfiguration(new AwsClientBuilder
+                        .EndpointConfiguration(properties.endpoint(), properties.region()))
+                .build();
+    }
+
+    @Bean
+    public IAddressSqsSender messageSender(
+            final QueueMessagingTemplate queueMessageTemplate) {
+        return new AddressSqsSender(queueMessageTemplate);
+    }
+
+    @Bean
     public AddressPort addressRepository(DynamoDbEnhancedAsyncClient dynamoDbEnhancedAsyncClient) {
         return new AddressRepository(
                 dynamoDbEnhancedAsyncClient.table(Address.class.getSimpleName(), TableSchema.fromBean(Address.class))
@@ -65,7 +95,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public ViaCepRepository viaCepRepository(final RestTemplate restTemplate){
+    public ViaCepRepository viaCepRepository(final RestTemplate restTemplate) {
         return new ViaCepRepository(restTemplate);
     }
 }
