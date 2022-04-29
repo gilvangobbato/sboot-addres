@@ -2,9 +2,10 @@ package com.github.gilvangobbato.adapter.output.dto;
 
 import lombok.*;
 
-@Getter
-@ToString
+@Data
 @Builder
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class ViaCepAddressDto {

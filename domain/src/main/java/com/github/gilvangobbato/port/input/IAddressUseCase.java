@@ -10,7 +10,7 @@ public interface IAddressUseCase {
 
     Mono<Boolean> update(Address address);
 
-    Mono<Address> findByCep(String cep);
+    Mono<Address> findByCep(final String cep);
 
     Flux<Address> getAddressList(int offset, int limit);
 
