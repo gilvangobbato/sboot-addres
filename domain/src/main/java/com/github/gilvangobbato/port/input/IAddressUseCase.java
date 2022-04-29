@@ -1,13 +1,17 @@
 package com.github.gilvangobbato.port.input;
 
 import com.github.gilvangobbato.domain.Address;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface IAddressUseCase {
 
-    void insert(Address address);
+    Mono<Boolean> insert(Address address);
 
-    void update(Address address);
+    Mono<Boolean> update(Address address);
 
-    Address findByCep(String cep);
+    Mono<Address> findByCep(final String cep);
+
+    Flux<Address> getAddressList(int offset, int limit);
 
 }

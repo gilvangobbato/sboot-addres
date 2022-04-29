@@ -2,6 +2,11 @@ plugins {
     id 'java'
 }
 
+dependencies {
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
+    implementation "software.amazon.awssdk:dynamodb-enhanced:$awsDynamoDBVersion"
+}
+
 jar {
     enabled = true
 }

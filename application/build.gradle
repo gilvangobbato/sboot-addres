@@ -5,15 +5,30 @@ plugins {
 }
 
 dependencies {
+
     implementation project(':domain')
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation ('org.springframework.boot:spring-boot-starter-webflux'){
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+    implementation "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
+    implementation ('org.springframework.boot:spring-boot-starter-actuator'){
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+    implementation "org.springframework.cloud:spring-cloud-starter-aws-messaging"
+    implementation "org.springframework.cloud:spring-cloud-aws-messaging"
+    implementation "com.amazonaws:aws-java-sdk-sqs:$awsSqsVersion"
 
-    implementation "com.amazonaws:aws-java-sdk-dynamodb:$awsDynamoDBVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+    implementation "software.amazon.awssdk:dynamodb:$awsDynamoDBVersion"
+    implementation "software.amazon.awssdk:dynamodb-enhanced:$awsDynamoDBVersion"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
+
 
 jar {
     enabled = true

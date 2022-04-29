@@ -1,15 +1,17 @@
 package com.github.gilvangobbato.port.output;
 
 import com.github.gilvangobbato.domain.Address;
+import reactor.core.publisher.Mono;
+import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
 
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface AddressPort {
-    List<Address> findAll(int page, int limit);
+    PagePublisher<Address> findAll(int page, int limit);
 
-    Address findByCep(String cep);
+    CompletableFuture<Address> findByCep(String cep);
 
-    Long insert(Address address);
+    CompletableFuture<Void> insert(Address address);
 
-    Long update(Address address);
+    Mono<Boolean> update(Address address);
 }

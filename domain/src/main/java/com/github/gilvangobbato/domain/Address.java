@@ -1,18 +1,20 @@
 package com.github.gilvangobbato.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamoDbBean
 public class Address {
-    private Long id;
     private String cep;
     private String place;
     private String complement;
@@ -25,6 +27,57 @@ public class Address {
     private String uf;
     private String country;
     private String ibgeCountry;
-    private LocalDateTime updateDate;
-    private LocalDateTime insertionDate;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
+
+    @DynamoDbPartitionKey
+    @DynamoDbAttribute("cep")
+    public String getCep() {
+        return cep;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getIbgeCity() {
+        return ibgeCity;
+    }
+
+    public String getGia() {
+        return gia;
+    }
+
+    public String getDdd() {
+        return ddd;
+    }
+
+    public String getSiafi() {
+        return siafi;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getIbgeCountry() {
+        return ibgeCountry;
+    }
+
 }

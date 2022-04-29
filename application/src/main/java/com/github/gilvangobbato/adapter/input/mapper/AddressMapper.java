@@ -1,11 +1,14 @@
 package com.github.gilvangobbato.adapter.input.mapper;
 
 import com.github.gilvangobbato.adapter.input.dto.AddressDto;
+import com.github.gilvangobbato.adapter.input.dto.AddressListDto;
 import com.github.gilvangobbato.domain.Address;
+
+import java.util.List;
 
 public class AddressMapper {
 
-    public static Address toEntity(AddressDto addressDto){
+    public static Address toEntity(AddressDto addressDto) {
         return Address.builder()
                 .cep(addressDto.getCep())
                 .city(addressDto.getCity())
@@ -22,7 +25,7 @@ public class AddressMapper {
                 .build();
     }
 
-    public static AddressDto toDto(Address address){
+    public static AddressDto toDto(Address address) {
         return AddressDto.builder()
                 .cep(address.getCep())
                 .city(address.getCity())
@@ -39,4 +42,9 @@ public class AddressMapper {
                 .build();
     }
 
+    public static AddressListDto toDtoList(List<AddressDto> addressDtos) {
+        return AddressListDto.builder()
+                .addresses(addressDtos)
+                .build();
+    }
 }
