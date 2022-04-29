@@ -5,6 +5,7 @@ import com.github.gilvangobbato.port.input.IAddressUseCase;
 import com.github.gilvangobbato.port.output.AddressPort;
 import com.github.gilvangobbato.port.output.IAddressSqsSender;
 import com.github.gilvangobbato.port.output.ViaCepPort;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,8 +50,8 @@ public class AddressUseCaseTest {
         }));
 
         StepVerifier.create(this.useCase.insert(address))
-                .expectComplete()
-                .verify();
+                .assertNext(Assertions::assertTrue)
+                .verifyComplete();
     }
 
     @Test

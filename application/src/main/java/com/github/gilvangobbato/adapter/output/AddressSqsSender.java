@@ -15,11 +15,12 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class AddressSqsSender implements IAddressSqsSender {
 
-    private final QueueMessagingTemplate messagingTemplate;
     private static final String QUEUE_NAME = "viaCepInsert";
+    private final QueueMessagingTemplate messagingTemplate;
 
     @Override
     public Mono<Address> send(Address address) {
+        address.setCep(address.getCep().replace("-", ""));
         return Mono.just(address)
                 .map(this::buildMessage)
                 .doOnNext(message -> messagingTemplate.convertAndSend(QUEUE_NAME, message))
