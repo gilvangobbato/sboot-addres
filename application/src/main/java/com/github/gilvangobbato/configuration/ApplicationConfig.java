@@ -117,7 +117,7 @@ public class ApplicationConfig {
         return AmazonSQSAsyncClientBuilder.standard()
                 .withCredentials(new DefaultAWSCredentialsProviderChain())
                 .withEndpointConfiguration(new AwsClientBuilder
-                        .EndpointConfiguration(properties.endpoint(), properties.region()))
+                        .EndpointConfiguration(properties.sqs().endpoint(), properties.region()))
                 .build();
     }
 

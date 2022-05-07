@@ -17,6 +17,8 @@ ext {
     jacksonVersion = '2.13.2'
     jacksonDatabindVersion = '2.13.2.2'
     reactorTestVersion = '3.4.16'
+    localstackVersion = '1.17.1'
+    testContainerVersion = '1.17.1'
 }
 
 allprojects {
@@ -61,6 +63,9 @@ subprojects {
         testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
         testImplementation "org.junit.jupiter:junit-jupiter-params:$jupiterVersion"
+        testImplementation "org.testcontainers:localstack:$localstackVersion"
+        testImplementation("org.testcontainers:junit-jupiter:$testContainerVersion")
+
     }
 
     tasks.withType(Test).configureEach {
