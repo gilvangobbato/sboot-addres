@@ -35,6 +35,7 @@ public class LocalstackConfiguration {
                 .build();
 
         createSqsQueue(amazonSQSAsync, "viaCepInsert");
+        createSqsQueue(amazonSQSAsync, "messageToTest");
         return amazonSQSAsync;
     }
 
